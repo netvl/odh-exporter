@@ -60,8 +60,13 @@
 (defmethod write-part :source
   [{:keys [content]}]
   (println "<source lang=\"\">")
-  (println content)
+  (print content)
   (println "</source>"))
+
+(defmethod write-part :ruler
+  [_]
+  (println)
+  (println "<hr/>"))
 
 (defmethod write-part :text
   [{:keys [content]}]

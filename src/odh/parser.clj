@@ -8,9 +8,18 @@
 
 (defrecord part [type content])
 
-(defn fullstr
+(defn preprocess
+  [^String s]
+  (-> s
+      (.replaceAll "---" "&mdash;")))
+
+(defn fullstr*
   [node]
   (apply str (-> node z/node :content)))
+
+(defn fullstr
+  [node]
+  (preprocess (fullstr* node)))
 
 (declare transform-node)
 
@@ -38,7 +47,7 @@
 
 (defn create-section
   [node]
-  (let [title (zx/xml1-> node :title zx/text)]
+  (let [title (fullstr (zx/xml1-> node :title))]
     (part. :section
       {:title title
        :level (section-level (zx/attr node :xml/id))
@@ -70,11 +79,15 @@
 
 (defn create-programlisting
   [node]
-  (part. :source (fullstr node)))
+  (part. :source (fullstr* node)))
+
+(defn create-hr
+  [node]
+  (part. :ruler nil))
 
 (defn create-text
   [node]
-  (part. :text node))
+  (part. :text (preprocess node)))
 
 (defmacro dispatch-tag
   "(dispatch-tag node a b c)
@@ -94,17 +107,20 @@
     (create-text node)
     (dispatch-tag node
       :para :habracut :emphasis :section :link :code
-      :itemizedlist :orderedlist :programlisting)))
+      :itemizedlist :orderedlist :programlisting :hr)))
 
 (defn construct-sequence
   [root]
   (map-transform (z/children root)))
 
 (defn read-xml
+  "Creates XML zipper for the XML document read from the given source."
   [source]
   (z/xml-zip (x/parse source)))
 
 (defn parse
+  "Entry point for the parser, loads a document from the given source 
+  (either input stream or reader) and creates nested sequence of document parts."
   [source]
   (construct-sequence (read-xml source)))
 
