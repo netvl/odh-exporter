@@ -3,18 +3,19 @@
 
 (defn show-sample-dialog
   [sample]
-  (with-widgets [(text :id :answer-text)
-                 (text :id :sample-text
-                       :multi-line? true
-                       :editable? false)
+  (with-widgets [(text :id :text-answer)
+                 (text
+                   :id :text-sample
+                   :multi-line? true
+                   :text sample)
                  (mig-panel :id :sample-panel
-                            :items [["Source type"]
-                                    [answer-text "growx, wrap"]
-                                    [sample-text "grow, push, wrap"]])]
+                            :items [["Source type" "split"]
+                                    [text-answer "growx, pushx, wrap"]
+                                    [text-sample "grow, push, spanx 2"]])]
     (let [sample-dialog (dialog :content sample-panel
                                 :title "Select source type"
                                 :option-type :ok-cancel
-                                :success-fn (fn [_] (text answer-text)))]
+                                :success-fn (fn [_] (text text-answer)))]
       (-> sample-dialog pack! show!))))
 
 (defn ask-source-type

@@ -1,7 +1,8 @@
 (ns odh.writer
   (:require [clojure.data.xml :as x]
             [clojure.zip :as z]
-            [clojure.data.zip.xml :as zx]))
+            [clojure.data.zip.xml :as zx])
+  (:require [odh.ui :as ui]))
 
 (defmulti write-part :type)
 
@@ -59,9 +60,15 @@
 
 (defmethod write-part :source
   [{:keys [content]}]
-  (println "<source lang=\"\">")
-  (print content)
-  (println "</source>"))
+  (if-let [lang (ui/ask-source-type content)]
+    (do
+      (println (str "<source lang=\"" lang "\">"))
+      (print content)
+      (println "</source>"))
+    (do
+      (println "<pre>")
+      (print content)
+      (println "</pre>"))))
 
 (defmethod write-part :ruler
   [_]

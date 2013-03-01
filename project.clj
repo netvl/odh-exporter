@@ -2,7 +2,8 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/data.zip "0.1.1"]
                  [org.clojure/data.xml "0.0.7"]
-                 [seesaw "1.4.2"]]
+                 [seesaw "1.4.2" :exclusions [com.miglayout/miglayout]]
+                 [com.miglayout/miglayout-swing "4.2.1"]]
 
   :aot :all
   :main odh.core
