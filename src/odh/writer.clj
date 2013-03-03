@@ -92,6 +92,18 @@
   (println)
   (println "<hr/>"))
 
+(defmethod write-part :image
+  [{{:keys [src linkify]} :content}]
+  (if linkify
+    (do
+      (log "Writing and linkifying image: " src)
+      (print (str "<a href=\"" src "\">"))
+      (print (str "<img src=\"" src "\">"))
+      (println "</a>"))
+    (do
+      (log "Writing image: " src)
+      (print (str "<img src=\"" src "\">")))))
+
 (defmethod write-part :text
   [{:keys [content]}]
   (log "Writing text piece")

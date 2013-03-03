@@ -67,7 +67,6 @@
 
 (defn create-link
   [node]
-
   (let [href (zx/attr node :xlink/href)
         text (fullstr node)]
     (log "Encountered link node:\n    " text " -> " href)
@@ -105,6 +104,12 @@
   (log "Encountered horizontal ruler node")
   (part. :ruler nil))
 
+(defn create-img
+  [node]
+  (log "Encountered image node")
+  (part. :image {:src (zx/attr node :src)
+                 :linkify (zx/attr node :linkify)}))
+
 (defn create-text
   [node]
   (log "Encountered textual node")
@@ -128,7 +133,7 @@
     (create-text node)
     (dispatch-tag node
       :para :habracut :emphasis :section :link :code
-      :itemizedlist :orderedlist :programlisting :hr)))
+      :itemizedlist :orderedlist :programlisting :hr :img)))
 
 (defn construct-sequence
   [root]

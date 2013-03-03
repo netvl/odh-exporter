@@ -1,7 +1,7 @@
 (ns odh.cache
   (:require [clojure.string :as s]
             [clojure.java.io :as io])
-  (:require [odh [util :as u] [ui :as ui]]))
+  (:require [odh [util :as u]]))
 
 (def cache (atom {}))
 (def ^:private cache-file (atom nil))
@@ -9,10 +9,8 @@
 (defn init-cache
   [source]
   (let [cache-file-name (s/replace source #"\.xml$" ".cache")]
-    (ui/log "Cache" "Initializing cache")
     (reset! cache-file cache-file-name)
     (when (.exists (io/file cache-file-name))
-      (ui/log "Cache" "Found cache file: " cache-file-name)
       (reset! cache (read-string (slurp cache-file-name))))))
 
 (defn update-cache

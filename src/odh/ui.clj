@@ -100,11 +100,15 @@
                  (mig-panel
                    :id :log-panel
                    :items [[(scrollable text-log) "grow, push, wrap"]
-                           [(button :text "Exit" :listen [:action (fn [e] (dispose! (to-root e)))]) "split"]])]
+                           [(button
+                              :text "Exit"
+                              :listen [:action #(do
+                                                  (shutdown-agents)
+                                                  (dispose! (to-root %)))]) "split"]])]
     (.setUpdatePolicy (.getCaret text-log) javax.swing.text.DefaultCaret/ALWAYS_UPDATE)
     (add-watch log-agent :log-dialog
       (fn [_ _ _ line]
-        (text! text-log (str (text text-log) line "\n"))))
+        (.append text-log (str line "\n"))))
     (let [log-window
           (frame
             :title "Log"

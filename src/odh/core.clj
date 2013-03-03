@@ -13,11 +13,11 @@
 
 (defn validate-args
   [args]
-  (and (> (count args) 2) args))
+  (and (>= (count args) 2) args))
 
 (defn -main [& args]
-  (if-let [[from to] (if-let [[from to] (validate-args args)]
-                       [from to]
+  (if-let [[from to] (if (validate-args args)
+                       args
                        (ui/ask-files))]
     (do (ui/present-log-window) (c/init-cache from) (process from to))
     (println "Usage: odh-exporter <source docbook file> <target file>")))
