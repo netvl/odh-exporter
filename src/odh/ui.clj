@@ -43,17 +43,15 @@
                                             (reset! source-previous (selection combo-answer)))])
                       (button
                         :text "Same for all"
-                        :listen [:action (fn [e]
-                                           (reset! source-state :same-for-all)
-                                           (return-from-dialog e (reset! source-previous (selection combo-answer))))])
+                        :listen [:action #(do	(reset! source-state :same-for-all)
+                                           		(return-from-dialog % (reset! source-previous (selection combo-answer))))])
                       (button
                         :text "Skip"
                         :listen [:action #(return-from-dialog % nil)])
                       (button
                         :text "Skip all"
-                        :listen [:action (fn [e]
-                                           (reset! source-state :skip-all)
-                                           (return-from-dialog e nil))])])]
+                        :listen [:action #(do (reset! source-state :skip-all)
+                                           		(return-from-dialog % nil))])])]
       sample-dialog)))
 
 (defn show-sample-dialog
